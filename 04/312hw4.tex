@@ -1,0 +1,176 @@
+% DOCUMENT FORMATING
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+
+% PACKAGES
+\usepackage{amsmath} % For extended formatting
+\usepackage{amssymb} % For math symbols
+\usepackage{amsthm} % For proof environment
+\usepackage{array} % For tables
+\usepackage{enumerate} % For lists
+\usepackage{extramarks} % For headers and footers
+\usepackage{blindtext}
+\usepackage{fancyhdr} % For custom headers
+\usepackage{graphicx} % For inserting images
+\usepackage{multicol} % For multiple columns
+\usepackage{verbatim} % For displaying code
+\usepackage{tkz-euclide}
+\usepackage{pgfplots}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+% SET UP HEADER AND FOOTER
+\pagestyle{fancy}
+\lhead{\MyCourse} % Top left header
+\chead{\MyTopicTitle} % Top center header
+\rhead{\MyAssignment} % Top right header
+\lfoot{\MyCampus} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{\MySemester} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+\newcommand{\MyCourse}{ICS 312}
+\newcommand{\MyTopicTitle}{HW 4}
+\newcommand{\MyAssignment}{Shin Saito}
+\newcommand{\MySemester}{Spring 2021}
+\newcommand{\MyCampus}{University of Hawaii at Manoa}
+\begin{document}
+\subsection*{Exercise 1}
+\begin{enumerate}
+    \item 2-byte quantities: 8FE0 + B036 
+   \begin{center}
+        \begin{tabular}{c c c c c}
+         c& &c    &    & \\
+    &8 & F & E & 0 \\
+    + & B & 0 & 3 & 6 \\
+    \hline 
+    1& 4 & 0 & 1 & 6
+    \end{tabular}
+   \end{center}
+   \begin{itemize}
+       \item The carry bit is set to CF = 1. 
+       \item The overflow bit is set to OF = 1
+       \item Since both 8FE9 and B036 are both negative the expected summation outcome is negative. 
+       \item However 4016 is positive number therefore, the overflow bit is set. 
+       \item The signed extend representation: 0000 4016
+       \item Hexadecimal to Decimal Conversion 
+       \begin{align*}
+           4 \cdot 16^3 + 1 \cdot 16^1 + 6  \\
+           = 16406
+       \end{align*}
+   \end{itemize}
+   \begin{algorithm}
+   \caption{macro prints}
+   \begin{algorithmic}[1]
+    \State mov ax, 03076h ; ax : 03076h
+    \State movsx eax, ax ; extend to a signed 4 byte value 0000 4016
+    \State call print\underline{ }int ; prints 16406 to the screen
+   \end{algorithmic}
+   \end{algorithm}
+   \item 1-byte: E5 + 0E 
+   \begin{center}
+       \begin{tabular}{c c c}
+       & c & \\
+        & E  & 5  \\
+        +& 0   & E \\
+        \hline 
+        & F & 3 
+       \end{tabular}
+   \end{center}
+   \begin{itemize}
+       \item The carry bit is set to CF = 0
+       \item The overflow bit is set to OF = 0. 
+       \item E5 is negative and 0E is positive then there is no expectation of overflow. Also E5 is small negative and 0E is a small positive so the summation should also be in the range. 
+       \item Hexadecimal to Decimal Conversion \\
+       F3 is a negative so take the complement 
+       \begin{align*}
+           FF - F3 =\\
+           0C + 1 = \\
+           0D
+       \end{align*}
+       \clearpage
+       Then convert it 
+       \begin{align*}
+           0 \cdot 16^1 + 13 \\
+           = 13
+       \end{align*}
+       Negate the outcome so -13. 
+       \item Signed-Extended: FFFF FFF3 
+   \end{itemize}
+      \begin{algorithm}
+   \caption{macro prints}
+   \begin{algorithmic}[1]
+   \State mov al, 0F3h ; points ax to F3
+    \State movsx eax, al ; extends F3 to a byte signed FFFF FFF3
+    \State call print\underline{ }int ; prints -13
+   \end{algorithmic}
+   \end{algorithm}
+   \item 2-byte quantities: 5243 + 7DBC \\
+   \begin{center}
+        \begin{tabular}{c c c c c}
+    &5 & 2 & 4 & 3 \\
+    + & 7 & D & B & C \\
+    \hline 
+    & C & F & F & F
+    \end{tabular}
+    \end{center}
+    \begin{itemize}
+    \item The carry bit is set to CF = 0 
+    \item The overflow bit is set to OF = 1
+    \item The reason is because since 5243 and 7DBC are both positive, the expecation of the summation is positive. However, CFFF is a negative causing the overflow.
+    \item Converting Hexadecimal to Decimal \\
+    Since CFFF is negative, take the negation of it by finding the two's complementary 
+    \begin{align*}
+        FFFF - CFFF = \\
+         = 3000 + 1 = 3001 \\
+         \to \\
+         3 \cdot 16^3 + 1 = \\
+         12289 \\
+         \text{negate it} -12289
+    \end{align*}
+    \item sign extended: FFFF CFFF
+   \end{itemize}
+         \begin{algorithm}
+   \caption{macro prints}
+   \begin{algorithmic}[1]
+   \State mov ax, 0CFh ; move al to CF
+    \State movsz eax, ax ; 4 byte sign extention of eax : FFFF CFFF 
+    \State call print\underline{ }int ; prints -12289
+   \end{algorithmic}
+   \end{algorithm}
+   \clearpage
+   \item 1-byte quantities: E5 + 3A 
+     \begin{center}
+       \begin{tabular}{c c c}
+       c &  & \\
+        & E  & 5  \\
+        +& 3   & A \\
+        \hline 
+      1 & 1 & F
+       \end{tabular}
+   \end{center}
+   \begin{itemize}
+       \item Set the Carry Flow into CF = 1
+       \item Set the Over Flow into OF = 0
+       \item Carry Flow because outcome is larger than a 1 byte 
+       \item Overflow is 0 because a negative (E5) and positive (3A) summation does not lead to an overflow.
+       \item Sign Extended: 0000 001F
+       \item Since 1F is positive then 
+       \begin{align*}
+           1 \cdot 16 + 15 =\\
+           31
+       \end{align*}
+                \begin{algorithm}
+   \caption{macro prints}
+   \begin{algorithmic}[1]
+   \State mov al, 01Fh ; point al to 1F
+    \State movsz eax, al ; eax : 4 byte sign extention  0000 001F 
+    \State call print\underline{ }int ; prints 31
+   \end{algorithmic}
+   \end{algorithm}
+   \end{itemize}
+\end{enumerate}
+\end{document}
